@@ -3,28 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How was your day?</title>
-
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: white;
-    }
-
-    h1 {
-      font-size: 3rem;
-      font-weight: 600;
-      text-align: center;
-    }
-  </style>
+  <title>Will You Be My Valentine?</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>How was your day?</h1>
+  <div class="card">
+    <h1 class="question">My love, will you be my valentine?</h1>
+
+    <div class="frog-wrap" aria-hidden="true">
+      <img class="frog" src="frog.png" alt="cute frog holding a heart" />
+    </div>
+
+    <label for="editor" class="editor-label">Answer with Python:</label>
+    <textarea id="editor" rows="3" spellcheck="false"></textarea>
+
+    <div class="controls">
+      <button id="run">Run ▶</button>
+      <button id="clear">Clear</button>
+    </div>
+    <div id="result" class="result" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // Utility function to escape HTML for safe display
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // State management
+    let _daysSinceInterval = null;
+    let _celebrateTimers = [];
+
+    function runCode() {
+      const code = document.getElementById('editor').value || '';
+      const m = code.match(/print\((['"])([\s\S]*?)\1\)/);
+      const captured = m ? m[2] : '';
+
+      const result = document.getElementById('result');
+      const normalized = captured ? captured.trim().toLowerCase().replace(/[!.?]+$/g, '') : '';
+      const acceptedAnswers = ['yes', 'of course', 'absolutely', 'sure', 'definitely', 'yep', 'yeah', 'yup', 'absolutely', 'certainly', 'always'];
+      
+      if (acceptedAnswers.includes(normalized)) {
+        // clear any existing interval
+        if(_daysSinceInterval) { clearInterval(_daysSinceInterval); _daysSinceInterval = null; }
+
+        result.innerHTML = `
+          <div class="result-card">
+            <h2>I love you <span class="heart-emoji">💘</span></h2>
+            <div class="itinerary">
+              <strong>Feb 14th</strong>
+              <ul>
+                <li>6:00 PM — Cinema 🍿</li>
+                <li>9:00 PM — Dinner 🍽️</li>
+              </ul>
+            </div>
+            <p class="ps">P.S. Our first date was <span id="days-since">...</span> days ago.</p>
+            <p class="forever">I look forward to ∞ more with you.</p>
+            <div id="celebrate" class="celebrate" aria-hidden="true"></div>
+          </div>
+        `;
+
+        // First date: 2025-08-01 18:00 London time (BST is UTC+1 in August)
+        const firstDate = new Date('2025-08-01T18:00:00+01:00');
+
+        function pad(n){ return String(n).padStart(2,'0'); }
+        function updateDaysSince(){
+          const now = new Date();
+          let diffSec = Math.floor((now - firstDate) / 1000);
+          if(diffSec < 0) diffSec = 0;
+          const days = Math.floor(diffSec / 86400);
+          diffSec = diffSec % 86400;
+          const hours = Math.floor(diffSec / 3600);
+          diffSec = diffSec % 3600;
+          const minutes = Math.floor(diffSec / 60);
+          const seconds = diffSec % 60;
+          const el = document.getElementById('days-since');
+          if(el) el.textContent = `${days} days, ${pad(hours)}:${pad(minutes)}:${pad(seconds)} ago`;
+        }
+
+        // update immediately and then every 1s so it stays current
+        updateDaysSince();
+        _daysSinceInterval = setInterval(updateDaysSince, 1000);
+
+        // start small confetti/hearts celebration
+        createCelebration();
+
+      } else if (captured) {
+        if (_daysSinceInterval) {
+          clearInterval(_daysSinceInterval);
+          _daysSinceInterval = null;
+        }
+        clearCelebration();
+        result.innerHTML = `<pre class="output">${escapeHtml(captured)}</pre>`;
+      } else {
+        if (_daysSinceInterval) {
+          clearInterval(_daysSinceInterval);
+          _daysSinceInterval = null;
+        }
+        clearCelebration();
+        result.innerHTML = `<pre class="output">No print() output detected.</pre>`;
+      }
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Event listeners
+    document.getElementById('run').addEventListener('click', runCode);
+    
+    document.getElementById('clear').addEventListener('click', () => {
+      document.getElementById('editor').value = '';
+      document.getElementById('result').innerHTML = '';
+      if (_daysSinceInterval) {
+        clearInterval(_daysSinceInterval);
+        _daysSinceInterval = null;
+      }
+      clearCelebration();
+    });
+    
+    document.getElementById('editor').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        runCode();
+      }
+    });
+
+    // Celebration animation functions
+    function createCelebration() {
+      clearCelebration();
+      const container = document.getElementById('celebrate');
+      if (!container) return;
+      const colors = ['#ffb3c6', '#ffd166', '#ffd1dc', '#9be89a', '#9ad0ff'];
+      const total = 28;
+      
+      for (let i = 0; i < total; i++) {
+        const el = document.createElement('div');
+        const isHeart = Math.random() > 0.6;
+        el.className = isHeart ? 'heart-piece' : 'confetti';
+        el.style.left = Math.random() * 100 + '%';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.transform = `translateY(0) rotate(${Math.random() * 360}deg)`;
+        el.style.opacity = '0';
+        container.appendChild(el);
+
+        const delay = 80 + Math.random() * 800;
+        const t = setTimeout(() => {
+          el.style.opacity = '1';
+          el.classList.add('fly');
+        }, delay);
+        _celebrateTimers.push(t);
+        
+        const removeT = setTimeout(() => {
+          if (el.parentNode) el.parentNode.removeChild(el);
+        }, delay + 3000);
+        _celebrateTimers.push(removeT);
+      }
+      
+      _celebrateTimers.push(setTimeout(() => clearCelebration(), 4500));
+    }
+
+    function clearCelebration() {
+      const container = document.getElementById('celebrate');
+      if (container) {
+        container.innerHTML = '';
+      }
+      while (_celebrateTimers.length) {
+        clearTimeout(_celebrateTimers.shift());
+      }
+    }
+  </script>
 </body>
 </html>

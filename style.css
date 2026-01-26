@@ -1,0 +1,385 @@
+/* ================================
+   Base Styles & Layout
+   ================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffd1dc 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+}
+
+/* ================================
+   Main Card
+   ================================ */
+
+.card {
+  width: min(680px, 100%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: clamp(24px, 5vw, 36px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ================================
+   Typography
+   ================================ */
+
+.question {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.02em;
+}
+
+.editor-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.01em;
+}
+
+/* ================================
+   Frog Image
+   ================================ */
+
+.frog-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.frog {
+  width: min(320px, 70vw);
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 280ms ease;
+}
+
+.frog:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ================================
+   Code Editor
+   ================================ */
+
+#editor {
+  min-height: 80px;
+  max-height: 200px;
+  resize: vertical;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #1a202c;
+  background: #ffffff;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+#editor:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+#editor::placeholder {
+  color: #a0aec0;
+}
+
+/* ================================
+   Controls (Buttons)
+   ================================ */
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.controls button {
+  background: #ffffff;
+  color: #2d3748;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.controls button:hover {
+  background: #f7fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.controls button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.controls button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+/* ================================
+   Result Display
+   ================================ */
+
+.result {
+  margin-top: 12px;
+}
+
+.result-card {
+  padding: 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffb3c6 0%, #ff8fb8 100%);
+  color: #1a202c;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.result-card h2 {
+  margin: 0 0 16px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.heart-emoji {
+  margin-left: 8px;
+  font-size: 1.5rem;
+  display: inline-block;
+  animation: heartPop 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.itinerary {
+  margin: 16px 0;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.itinerary strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.itinerary ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.itinerary li {
+  margin: 8px 0;
+  padding-left: 4px;
+}
+
+.itinerary li::before {
+  content: "•";
+  margin-right: 8px;
+  color: #fc8eac;
+  font-weight: bold;
+}
+
+.ps {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  color: #2d3748;
+  line-height: 1.6;
+}
+
+#days-since {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #2d3748;
+  white-space: nowrap;
+}
+
+.forever {
+  margin-top: 12px;
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 1.05rem;
+}
+
+.output {
+  background: #ffffff;
+  color: #2d3748;
+  padding: 16px;
+  border-radius: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ================================
+   Celebration Animation
+   ================================ */
+
+.celebrate {
+  position: relative;
+  pointer-events: none;
+  height: 0;
+  overflow: visible;
+}
+
+.confetti,
+.heart-piece {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  will-change: transform, opacity;
+}
+
+.heart-piece {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  background: transparent;
+}
+
+.heart-piece::after {
+  content: '💖';
+  display: block;
+  transform: scale(0.95);
+}
+
+.confetti.fly {
+  animation: confetti-fall 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.heart-piece.fly {
+  animation: heart-rise 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* ================================
+   Keyframe Animations
+   ================================ */
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(240px) rotate(400deg) scale(0.8);
+  }
+}
+
+@keyframes heart-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-200px) scale(1.1);
+  }
+}
+
+/* ================================
+   Responsive Design
+   ================================ */
+
+@media (max-width: 640px) {
+  .card {
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+
+  .result-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .itinerary {
+    padding: 12px;
+  }
+}
