@@ -18,6 +18,30 @@ body {
   background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffd1dc 100%);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #ffffff;
+  position: relative;
+}
+
+/* ================================
+   Particles Background
+   ================================ */
+
+#tsparticles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#tsparticles canvas {
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+}
+
+.card {
+  position: relative;
+  z-index: 1;
 }
 
 /* ================================
@@ -25,6 +49,8 @@ body {
    ================================ */
 
 .card {
+  position: relative;
+  z-index: 1;
   width: min(680px, 100%);
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
