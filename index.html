@@ -8,6 +8,12 @@
 </head>
 <body>
   <div id="tsparticles"></div>
+  
+  <!-- Interactive Frog -->
+  <div id="interactive-frog" class="interactive-frog">
+    <img src="transparent_frog3.png" alt="interactive frog" />
+  </div>
+  
   <div class="card">
     <h1 class="question">My love, will you be my valentine?</h1>
 
@@ -178,6 +184,122 @@ for moment in range(1, int(math.inf)):
         clearTimeout(_celebrateTimers.shift());
       }
     }
+
+    // Interactive Frog Logic
+    (function() {
+      const frog = document.getElementById('interactive-frog');
+      if (!frog) return;
+      
+      let frogX = Math.random() * (window.innerWidth - 80);
+      let frogY = window.innerHeight - 100;
+      let targetX = frogX;
+      let targetY = frogY;
+      let isJumping = false;
+      
+      frog.style.left = frogX + 'px';
+      frog.style.bottom = '20px';
+      
+      // Random idle hopping
+      function randomHop() {
+        if (isJumping) return;
+        const maxX = window.innerWidth - 80;
+        targetX = Math.random() * maxX;
+        jump();
+      }
+      
+      let hopInterval = setInterval(randomHop, 3000 + Math.random() * 2000);
+      
+      // Mouse tracking
+      let mouseX = -1000;
+      let mouseY = -1000;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        const rect = frog.getBoundingClientRect();
+        const frogCenterX = rect.left + rect.width / 2;
+        const frogCenterY = rect.top + rect.height / 2;
+        
+        const distance = Math.sqrt(
+          Math.pow(mouseX - frogCenterX, 2) + 
+          Math.pow(mouseY - frogCenterY, 2)
+        );
+        
+        // If mouse gets too close, frog runs away
+        if (distance < 150 && !isJumping) {
+          const angle = Math.atan2(frogCenterY - mouseY, frogCenterX - mouseX);
+          const jumpDistance = 150 + Math.random() * 100;
+          targetX = frogCenterX + Math.cos(angle) * jumpDistance;
+          targetY = frogCenterY + Math.sin(angle) * jumpDistance;
+          
+          // Keep within bounds
+          const maxX = window.innerWidth - 80;
+          targetX = Math.max(40, Math.min(maxX, targetX));
+          targetY = Math.max(100, Math.min(window.innerHeight - 100, targetY));
+          
+          jump();
+        }
+      });
+      
+      function jump() {
+        if (isJumping) return;
+        isJumping = true;
+        
+        const startX = parseFloat(frog.style.left) || frogX;
+        const startBottom = parseFloat(frog.style.bottom) || 20;
+        const endX = targetX;
+        
+        // Flip frog if moving left
+        if (endX < startX) {
+          frog.style.transform = 'scaleX(-1)';
+        } else {
+          frog.style.transform = 'scaleX(1)';
+        }
+        
+        frog.classList.add('jumping');
+        
+        const duration = 600;
+        const startTime = performance.now();
+        
+        function animate(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Easing function for smooth movement
+          const eased = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          
+          // Horizontal movement
+          const currentX = startX + (endX - startX) * eased;
+          frog.style.left = currentX + 'px';
+          
+          // Vertical jump arc
+          const jumpHeight = 80 * Math.sin(progress * Math.PI);
+          frog.style.bottom = (startBottom + jumpHeight) + 'px';
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            frog.classList.remove('jumping');
+            frogX = currentX;
+            isJumping = false;
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        const maxX = window.innerWidth - 80;
+        if (frogX > maxX) {
+          frogX = maxX;
+          frog.style.left = frogX + 'px';
+        }
+      });
+    })();
   </script>
 
   <!-- Particles Animation -->
