@@ -206,6 +206,68 @@ body {
   font-weight: 700;
 }
 
+.countdown-box {
+  margin: 20px 0;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.countdown-segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.countdown-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e91e63;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  line-height: 1;
+}
+
+.countdown-unit {
+  font-size: 0.75rem;
+  color: #2d3748;
+  font-weight: 600;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.countdown-separator {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e91e63;
+  padding: 0 4px;
+}
+
+.countdown-complete {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e91e63;
+  animation: heartPop 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .heart-emoji {
   margin-left: 8px;
   font-size: 1.5rem;
@@ -407,6 +469,226 @@ body {
 }
 
 /* ================================
+   Floating Hearts
+   ================================ */
+
+.floating-hearts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.floating-heart {
+  position: absolute;
+  font-size: 2rem;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.2s ease;
+  animation: floatUp 8s linear forwards;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.floating-heart:hover {
+  transform: scale(1.3);
+}
+
+.floating-heart.popped {
+  animation: heartPop 0.4s ease-out forwards;
+  pointer-events: none;
+}
+
+.hearts-score {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #e91e63;
+  padding: 12px 20px;
+  border-radius: 24px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.3s ease;
+}
+
+.hearts-score.pulse {
+  animation: scorePulse 0.4s ease;
+}
+
+.pop-message {
+  position: absolute;
+  color: #ff1744;
+  font-weight: 700;
+  font-size: 1.2rem;
+  pointer-events: none;
+  animation: popMessage 1.5s ease-out forwards;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+  z-index: 150;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heartPop {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) rotate(20deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes scorePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes popMessage {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.2);
+  }
+  100% {
+    transform: translateY(-60px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ================================
+   Mouse Trail
+   ================================ */
+
+.trail-particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1rem;
+  z-index: 50;
+  animation: trailFade 1.2s ease-out forwards;
+  user-select: none;
+}
+
+@keyframes trailFade {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* ================================
+   Shooting Stars
+   ================================ */
+
+.shooting-star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.8),
+              0 0 8px 4px rgba(255, 255, 255, 0.5),
+              0 0 12px 6px rgba(200, 220, 255, 0.3);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 2px;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, 
+    rgba(255, 255, 255, 0.8) 0%, 
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0) 100%);
+  transform-origin: right center;
+  filter: blur(0.5px);
+}
+
+.shooting-star.shooting {
+  animation: shootingStar var(--duration) linear forwards;
+}
+
+@keyframes shootingStar {
+  0% {
+    transform: translate(0, 0) rotate(var(--angle));
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--distance), calc(var(--distance) * var(--slope))) rotate(var(--angle));
+    opacity: 0;
+  }
+}
+
+/* ================================
+   Celebration Shower
+   ================================ */
+
+.celebration-particle {
+  position: fixed;
+  font-size: 1.5rem;
+  pointer-events: none;
+  z-index: 300;
+  animation: celebrationFall var(--fall-duration) ease-in forwards;
+}
+
+@keyframes celebrationFall {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--fall-distance)) rotate(var(--rotation)) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* ================================
    Interactive Frog
    ================================ */
 
@@ -431,6 +713,19 @@ body {
 
 .interactive-frog.jumping {
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+  animation: frogStretch 0.6s ease-in-out;
+}
+
+@keyframes frogStretch {
+  0% {
+    transform: scaleY(0.8) scaleX(1.1);
+  }
+  50% {
+    transform: scaleY(1.3) scaleX(0.9);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+  }
 }
 
 .interactive-frog:hover {
